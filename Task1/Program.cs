@@ -12,8 +12,8 @@ namespace Task1
         static void Main(string[] args)
         {
             Task t = new Task("FileInput.txt", "FileOutput.txt");
-            var z =t.TreeToLine();
-            int? maxLen = z.Max(x => x?.Max(y => y?.Length));
+            //t.ToConsole();
+            
 
             Console.WriteLine();
             Console.ReadKey();

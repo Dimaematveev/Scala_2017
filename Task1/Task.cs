@@ -9,8 +9,8 @@ namespace Task1
 {
     public class Task
     {
-        public string NameInputFile;
-        public string NameOutputFile;
+        string NameInputFile;
+        string NameOutputFile;
 
         public int N;
         public int[] V;
@@ -23,7 +23,41 @@ namespace Task1
             ReadInputFile();
             CreateBinaryTree();
 
+            ToConsole();
+
+
+        }
+        public void ToConsole()
+        {
             var lines = TreeToLine();
+            int maxLen = (int)lines.Max(x => x?.Max(y => y?.Length));
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var mass = lines[i];
+                int maxxx = (int)(Math.Pow(2, lines.Length - i - 1)*1.5);
+                Console.WriteLine();
+                for (int j=0;j<mass.Length;j++)
+                {
+                    var item = mass[j];
+                    if (j%2==1)
+                    {
+                        Console.Write($"|{new string('-', maxLen)}|");
+                    }
+                    int allLen = maxxx * (maxLen + 2);
+                    if (item==null)
+                    {
+                        Console.Write($"|{new string(' ', allLen-2)}|");
+                    }
+                    else
+                    {
+                        //int len = item.Length;
+                       
+                        //item = new string(' ', (allLen-len)/2) + item;
+
+                        Console.Write($"|{item.PadRight(allLen-2)}|");
+                    }
+                }
+            }
         }
 
         private void ReadInputFile()
@@ -52,7 +86,7 @@ namespace Task1
             }            
         }
 
-        public string[][] TreeToLine()
+        private string[][] TreeToLine()
         {
             var bt = new List<BinaryTree<int>[]>();
             bt.Add(new BinaryTree<int>[] { BinaryTree });
@@ -84,8 +118,26 @@ namespace Task1
                 }
                 bt.Add(btM);
             }
-            string[][] ret = bt.Select(mass => mass.Select(tree => tree?.ToString()).ToArray()).ToArray();
-            return ret;
+            //string[][] ret = bt.Select(mass => mass.Select(tree => tree?.ToString()).ToArray()).ToArray();
+            List<string[]> ret = new List<string[]>();
+            for (int i = 0; i < bt.Count; i++)
+            {
+                var mass = bt[i];
+
+                List<string> temp = new List<string>();
+                for (int j = 0; j < mass.Length; j++)
+                {
+                    var item = mass[j];
+
+                    if (j%2==1)
+                    {
+                        temp.Add("-");
+                    }
+                    temp.Add(item?.ToString());
+                }
+                ret.Add(temp.ToArray());
+            }
+            return ret.ToArray();
         }
     }
 }
