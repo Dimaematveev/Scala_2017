@@ -23,41 +23,85 @@ namespace Task1
             ReadInputFile();
             CreateBinaryTree();
 
-            ToConsole();
-
+            WriteToFile();
 
         }
-        public void ToConsole()
+
+        private void WriteToFile()
+        {
+            var str = ToLineString(false);
+            using (StreamWriter sw = new StreamWriter(NameOutputFile))
+            {
+                foreach (var item in str)
+                {
+                    sw.WriteLine(item);
+                }
+            }
+        }
+
+        private string[] ToLineString(bool isMax = true)
         {
             var lines = TreeToLine();
             int maxLen = (int)lines.Max(x => x?.Max(y => y?.Length));
-            for (int i = 0; i < lines.Length; i++)
+            var str = new List<List<string>>();
+            var mas = new int?[(int)Math.Pow(2, lines.Length)-1];
+            int z = 0;
+            for (int i = lines.Length - 1; i >= 0; i--)
             {
-                var mass = lines[i];
-                int maxxx = (int)(Math.Pow(2, lines.Length - i - 1)*1.5);
-                Console.WriteLine();
-                for (int j=0;j<mass.Length;j++)
+                
+                var temp = new List<string>();
+                for (int k = 0; k < z; k++)
                 {
-                    var item = mass[j];
-                    if (j%2==1)
+                    temp.Add("");
+                }
+                for (int j = 0; j < lines[i].Length; j++)
+                {
+                    if (j != 0)
                     {
-                        Console.Write($"|{new string('-', maxLen)}|");
+                        for (int k = 0; k < 2 * z + 1; k++)
+                        {
+                            temp.Add("");
+                        }
                     }
-                    int allLen = maxxx * (maxLen + 2);
-                    if (item==null)
+                    if (lines[i][j] == null) 
                     {
-                        Console.Write($"|{new string(' ', allLen-2)}|");
+                        mas[temp.Count] = null;
+                        temp.Add("");
                     }
                     else
                     {
-                        //int len = item.Length;
-                       
-                        //item = new string(' ', (allLen-len)/2) + item;
-
-                        Console.Write($"|{item.PadRight(allLen-2)}|");
+                        mas[temp.Count] = lines.Length - str.Count;
+                        temp.Add(lines[i][j]);
                     }
                 }
+                for (int k = 0; k < z; k++)
+                {
+                    temp.Add("");
+                }
+                str.Add(temp);
+                z = 2 * z + 1;
             }
+            var zz = mas.Where(x => x != null).ToArray();
+            str.Reverse();
+
+            var res = new List<string>();
+
+            foreach (var mass in str)
+            {
+                Console.WriteLine();
+                var temp = "";
+                for (int i = 0; i < mass.Count; i++)
+                {
+                    
+                    var item = mass[i];
+                    if (isMax || mas[i]!=null)
+                    {
+                        temp += item.ToString().PadRight(maxLen);
+                    }
+                }
+                res.Add(temp);
+            }
+            return res.ToArray();
         }
 
         private void ReadInputFile()
@@ -131,7 +175,7 @@ namespace Task1
 
                     if (j%2==1)
                     {
-                        temp.Add("-");
+                        //temp.Add("-");
                     }
                     temp.Add(item?.ToString());
                 }
