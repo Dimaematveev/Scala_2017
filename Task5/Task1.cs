@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task1
+namespace Task5
 {
-    public class Task
+    public class Task1
     {
     }
 }
