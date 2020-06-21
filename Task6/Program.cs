@@ -16,35 +16,70 @@ namespace Task6
                 1,3,2,9,2,5,4
             };
 
-            int max = h[0];
-            int count = 1;
+            T6 t6 = new T6(h[0]);
             for (int i = 1; i < N; i++)
             {
-                if (h[i]==h[i-1])
-                {
-                    count++;
-                }
-                else
-                {
-                    int maxtemp= h[i - 1] * count;
-                    if (maxtemp>max)
-                    {
-                        max = maxtemp;
-                    }
-                    count = 1;
-                }
+                t6.Add(h[i]);
             }
-            {
-                int maxtemp = h[N-1] * count;
-                if (maxtemp > max)
-                {
-                    max = maxtemp;
-                }
-            }
+            
 
-
-            Console.WriteLine(max);
+            Console.WriteLine(t6.Max());
             Console.ReadKey();
+        }
+    }
+
+    public class T6
+    {
+        public List<Item> Item ;
+
+        public T6(int val)
+        {
+            Item = new List<Item>();
+            Item.Add(new Task6.Item(val));
+        }
+
+        public void Add(int val)
+        {
+            Item.Add(new Task6.Item(val, Item.Last()));
+        }
+
+        public int Max()
+        {
+           
+            return Item.Max(x=>x.Max());
+        }
+    }
+    public class Item
+    {
+        public int value;
+        public Dictionary<int,int> Square;
+
+        public Item(int value)
+        {
+            this.value = value;
+            Square = new Dictionary<int, int>();
+            for (int i = 1; i <= value; i++)
+            {
+                Square.Add(i, i);
+            }
+        }
+        public Item(int value, Item item)
+        {
+            this.value = value;
+            Square = new Dictionary<int, int>();
+            for (int i = 1; i <= value; i++)
+            {
+                Square.Add(i, i);
+                if (item != null && item.Square.ContainsKey(i))
+                {
+                    Square[i] += item.Square[i];
+                }
+            }
+        }
+
+        public int Max()
+        {
+            return Square.Max(x => x.Value);
         }
     }
 }
